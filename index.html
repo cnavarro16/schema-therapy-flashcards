@@ -41,7 +41,7 @@
             background: var(--card-bg);
             padding: 25px;
             border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
             margin-bottom: 30px;
         }
 
@@ -66,7 +66,8 @@
             margin-bottom: 5px;
         }
 
-        input[type="text"], textarea {
+        input[type="text"],
+        textarea {
             width: 100%;
             padding: 10px;
             border: 1px solid var(--border-color);
@@ -81,7 +82,6 @@
             min-height: 60px;
         }
 
-        /* Regular button styling to avoid native form submission mechanics */
         .action-btn {
             width: 100%;
             background-color: var(--accent-color);
@@ -102,11 +102,11 @@
 
         /* Screenshot Output Styles */
         .screenshot-card {
-            display: none; /* Hidden until generated */
+            display: none;
             background: var(--card-bg);
             padding: 40px;
             border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
             border: 1px solid var(--border-color);
             margin-bottom: 50px;
         }
@@ -152,137 +152,140 @@
     </style>
 </head>
 <body>
-
-<div class="container">
-    <h1>Schema Therapy Flash Card Tool</h1>
-    
-    <div class="card-form">
-        <div class="section-title">1. Acknowledgement of Current Feeling</div>
-        <div class="form-group">
-            <label for="emotions">Right now I feel (emotions):</label>
-            <input type="text" id="emotions" placeholder="e.g., anxious, defensive, angry">
+    <div class="container">
+        <h1>Schema Therapy Flash Card Tool</h1>
+        <form id="flashcardForm" class="card-form">
+            <div class="section-title">1. Acknowledgement of Current Feeling</div>
+            <div class="form-group">
+                <label for="emotions">Right now I feel (emotions):</label>
+                <input type="text" id="emotions" placeholder="e.g., anxious, defensive, angry" required>
+            </div>
+            <div class="form-group">
+                <label for="trigger">Because (trigger situation):</label>
+                <textarea id="trigger" placeholder="e.g., my colleague critiqued my pull request code layout"
+                    required></textarea>
+            </div>
+            <div class="section-title">2. Identification of Schema(s)</div>
+            <div class="form-group">
+                <label for="schemas">However, I know that this is probably my (relevant schema/s):</label>
+                <input type="text" id="schemas" placeholder="e.g., Defectiveness, Unrelenting Standards" required>
+            </div>
+            <div class="form-group">
+                <label for="origin">schema(s), which I learned through (origin):</label>
+                <textarea id="origin" placeholder="e.g., early school environments where mistakes were highly penalized"
+                    required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="distortion">These schemas lead me to exaggerate the degree to which (schema
+                    distortion):</label>
+                <textarea id="distortion"
+                    placeholder="e.g., a simple code review means I am bad at my job and going to be fired"
+                    required></textarea>
+            </div>
+            <div class="section-title">3. Reality-Testing</div>
+            <div class="form-group">
+                <label for="negativeThinking">Even though I believe (negative thinking):</label>
+                <textarea id="negativeThinking"
+                    placeholder="e.g., I'm incompetent if my code isn't perfect on the first pass" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="healthyView">the reality is that (healthy view):</label>
+                <textarea id="healthyView"
+                    placeholder="e.g., feedback is standard industry collaboration, not a personal attack"
+                    required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="evidence">The evidence in my life supporting the healthy view includes (one example per
+                    line):</label>
+                <textarea id="evidence" rows="3"
+                    placeholder="I have successfully delivered dozens of features&#10;My tech lead praised my architecture work last week"
+                    required></textarea>
+            </div>
+            <div class="section-title">4. Behavioural Instruction</div>
+            <div class="form-group">
+                <label for="negativeBehaviour">Therefore, even though I feel like (negative behaviour):</label>
+                <input type="text" id="negativeBehaviour"
+                    placeholder="e.g., writing a defensive reply or disengaging from the task" required>
+            </div>
+            <div class="form-group">
+                <label for="alternativeBehaviour">Instead I could (one alternative per line):</label>
+                <textarea id="alternativeBehaviour" rows="3"
+                    placeholder="Take a 5-minute walk before replying&#10;Ask a clarifying question to learn their perspective"
+                    required></textarea>
+            </div>
+            <button type="submit" class="action-btn">Generate Screenshot Version</button>
+        </form>
+        <div id="screenshotCard" class="screenshot-card">
+            <div class="screenshot-header">
+                <h2>Schema Therapy - Flash Card</h2>
+            </div>
+            <div class="output-section">
+                <p>Right now I feel <span id="outEmotions" class="fill-text"></span> because <span id="outTrigger"
+                        class="fill-text"></span>.</p>
+            </div>
+            <div class="output-section">
+                <p>However, I know that this is probably my <span id="outSchemas" class="fill-text"></span> schema(s),
+                    which I learned through <span id="outOrigin" class="fill-text"></span>.</p>
+                <p>These schemas lead me to exaggerate the degree to which <span id="outDistortion"
+                        class="fill-text"></span>.</p>
+            </div>
+            <div class="output-section">
+                <p>Even though I believe <span id="outNegativeThinking" class="fill-text"></span>, the reality is that
+                    <span id="outHealthyView" class="fill-text"></span>.</p>
+                <p>The evidence in my life supporting the healthy view includes:</p>
+                <ul id="outEvidence" class="bullet-list"></ul>
+            </div>
+            <div class="output-section">
+                <p>Therefore, even though I feel like <span id="outNegativeBehaviour" class="fill-text"></span>,</p>
+                <p>Instead I could:</p>
+                <ul id="outAlternativeBehaviour" class="bullet-list"></ul>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="trigger">Because (trigger situation):</label>
-            <textarea id="trigger" placeholder="e.g., my colleague critiqued my pull request code layout"></textarea>
-        </div>
-
-        <div class="section-title">2. Identification of Schema(s)</div>
-        <div class="form-group">
-            <label for="schemas">However, I know that this is probably my (relevant schema/s):</label>
-            <input type="text" id="schemas" placeholder="e.g., Defectiveness, Unrelenting Standards">
-        </div>
-        <div class="form-group">
-            <label for="origin">schema(s), which I learned through (origin):</label>
-            <textarea id="origin" placeholder="e.g., early school environments where mistakes were highly penalized"></textarea>
-        </div>
-        <div class="form-group">
-            <label for="distortion">These schemas lead me to exaggerate the degree to which (schema distortion):</label>
-            <textarea id="distortion" placeholder="e.g., a simple code review means I am bad at my job and going to be fired"></textarea>
-        </div>
-
-        <div class="section-title">3. Reality-Testing</div>
-        <div class="form-group">
-            <label for="negativeThinking">Even though I believe (negative thinking):</label>
-            <textarea id="negativeThinking" placeholder="e.g., I'm incompetent if my code isn't perfect on the first pass"></textarea>
-        </div>
-        <div class="form-group">
-            <label for="healthyView">the reality is that (healthy view):</label>
-            <textarea id="healthyView" placeholder="e.g., feedback is standard industry collaboration, not a personal attack"></textarea>
-        </div>
-        <div class="form-group">
-            <label for="evidence">The evidence in my life supporting the healthy view includes (one example per line):</label>
-            <textarea id="evidence" rows="3" placeholder="I have successfully delivered dozens of features&#10;My tech lead praised my architecture work last week"></textarea>
-        </div>
-
-        <div class="section-title">4. Behavioural Instruction</div>
-        <div class="form-group">
-            <label for="negativeBehaviour">Therefore, even though I feel like (negative behaviour):</label>
-            <input type="text" id="negativeBehaviour" placeholder="e.g., writing a defensive reply or disengaging from the task">
-        </div>
-        <div class="form-group">
-            <label for="alternativeBehaviour">Instead I could (one alternative per line):</label>
-            <textarea id="alternativeBehaviour" rows="3" placeholder="Take a 5-minute walk before replying&#10;Ask a clarifying question to learn their perspective"></textarea>
-        </div>
-
-        <button type="button" class="action-btn" onclick="generateCard()">Generate Screenshot Version</button>
     </div>
+    <script>
+        // Bind directly to the submit event of the form
+        document.getElementById('flashcardForm').addEventListener('submit', function (e) {
+            // This is the magic phrase: stops the browser from reloading the page
+            e.preventDefault();
 
-    <div id="screenshotCard" class="screenshot-card">
-        <div class="screenshot-header">
-            <h2>Schema Therapy - Flash Card</h2>
-        </div>
-        
-        <div class="output-section">
-            <p>Right now I feel <span id="outEmotions" class="fill-text"></span> because <span id="outTrigger" class="fill-text"></span>.</p>
-        </div>
+            function escapeHtml(text) {
+                return text
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#039;");
+            }
 
-        <div class="output-section">
-            <p>However, I know that this is probably my <span id="outSchemas" class="fill-text"></span> schema(s), which I learned through <span id="outOrigin" class="fill-text"></span>.</p>
-            <p>These schemas lead me to exaggerate the degree to which <span id="outDistortion" class="fill-text"></span>.</p>
-        </div>
+            function makeBulletList(text) {
+                if (!text.trim()) return '';
+                return text.split('\n')
+                    .map(line => line.trim())
+                    .filter(line => line.length > 0)
+                    .map(line => `<li>${escapeHtml(line)}</li>`)
+                    .join('');
+            }
 
-        <div class="output-section">
-            <p>Even though I believe <span id="outNegativeThinking" class="fill-text"></span>, the reality is that <span id="outHealthyView" class="fill-text"></span>.</p>
-            <p>The evidence in my life supporting the healthy view includes:</p>
-            <ul id="outEvidence" class="bullet-list"></ul>
-        </div>
+            // DOM Updates
+            document.getElementById('outEmotions').textContent = document.getElementById('emotions').value;
+            document.getElementById('outTrigger').textContent = document.getElementById('trigger').value;
 
-        <div class="output-section">
-            <p>Therefore, even though I feel like <span id="outNegativeBehaviour" class="fill-text"></span>,</p>
-            <p>Instead I could:</p>
-            <ul id="outAlternativeBehaviour" class="bullet-list"></ul>
-        </div>
-    </div>
-</div>
+            document.getElementById('outSchemas').textContent = document.getElementById('schemas').value;
+            document.getElementById('outOrigin').textContent = document.getElementById('origin').value;
+            document.getElementById('outDistortion').textContent = document.getElementById('distortion').value;
 
-<script>
-    function generateCard() {
-        // Helper function to escape HTML characters safely
-        function escapeHtml(text) {
-            return text
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
-        }
+            document.getElementById('outNegativeThinking').textContent = document.getElementById('negativeThinking').value;
+            document.getElementById('outHealthyView').textContent = document.getElementById('healthyView').value;
+            document.getElementById('outEvidence').innerHTML = makeBulletList(document.getElementById('evidence').value);
 
-        // Helper to turn newlines into clean list items
-        function makeBulletList(text) {
-            if (!text.trim()) return '';
-            return text.split('\n')
-                .map(line => line.trim())
-                .filter(line => line.length > 0)
-                .map(line => `<li>${escapeHtml(line)}</li>`)
-                .join('');
-        }
+            document.getElementById('outNegativeBehaviour').textContent = document.getElementById('negativeBehaviour').value;
+            document.getElementById('outAlternativeBehaviour').innerHTML = makeBulletList(document.getElementById('alternativeBehaviour').value);
 
-        // Map inputs directly to output text elements
-        document.getElementById('outEmotions').textContent = document.getElementById('emotions').value || '_____';
-        document.getElementById('outTrigger').textContent = document.getElementById('trigger').value || '_____';
-        
-        document.getElementById('outSchemas').textContent = document.getElementById('schemas').value || '_____';
-        document.getElementById('outOrigin').textContent = document.getElementById('origin').value || '_____';
-        document.getElementById('outDistortion').textContent = document.getElementById('distortion').value || '_____';
-        
-        document.getElementById('outNegativeThinking').textContent = document.getElementById('negativeThinking').value || '_____';
-        document.getElementById('outHealthyView').textContent = document.getElementById('healthyView').value || '_____';
-        
-        const evidenceVal = document.getElementById('evidence').value;
-        document.getElementById('outEvidence').innerHTML = evidenceVal ? makeBulletList(evidenceVal) : '<li>_____</li>';
-        
-        document.getElementById('outNegativeBehaviour').textContent = document.getElementById('negativeBehaviour').value || '_____';
-        
-        const altBehaviourVal = document.getElementById('alternativeBehaviour').value;
-        document.getElementById('outAlternativeBehaviour').innerHTML = altBehaviourVal ? makeBulletList(altBehaviourVal) : '<li>_____</li>';
-
-        // Reveal the target card and scroll down smoothly
-        const targetCard = document.getElementById('screenshotCard');
-        targetCard.style.display = 'block';
-        targetCard.scrollIntoView({ behavior: 'smooth' });
-    }
-</script>
-
+            // Render card
+            const targetCard = document.getElementById('screenshotCard');
+            targetCard.style.display = 'block';
+            targetCard.scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
 </body>
 </html>
